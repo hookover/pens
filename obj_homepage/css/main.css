@@ -144,8 +144,10 @@ h1,h2,h3,h4,h5,h6{
     box-sizing: border-box;
     width:25%;
     float:left;
+    height: 172px;
     list-style: none;
-    padding:10px;
+    padding: 10px;
+    overflow: hidden;
 }
 .photos__list li img{
     width:100%;
@@ -199,6 +201,10 @@ h1,h2,h3,h4,h5,h6{
 }
 .contact input,.contact textarea{
     padding:8px;
+}
+.contact svg{
+    width: 160px;
+    height: 160px;
 }
 /*  Large Devices, Wide Screens */
 @media only screen and (max-width:1200px)
