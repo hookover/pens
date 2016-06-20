@@ -1,0 +1,43 @@
+.man{
+    margin:50px;
+    padding:60px;
+    background-color: #efefef;
+    border-radius:5px;
+    font-size: 16px;
+}
+.title{
+    font-size:6.5rem;
+}
+.img-container{
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+}
+.img-container p{
+    height: 4rem;
+    line-height: 4rem;
+    margin-bottom:0;
+    font-size: 0.9rem;
+    overflow: hidden;
+}
+img{
+    border-radius:5px;
+}
+blockquote{
+    font-size:2.5rem;
+    font-weight: 100;
+}
+.wiki{
+    font-size:3rem;
+}
+.content{
+    margin-top:4rem;
+}
+.img-responsive{
+    max-width: 100%;
+}
+li{
+    margin: 0.2rem 0;
+    font-size: 1.2rem;
+}

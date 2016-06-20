@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="man" id="man">
+    <div class="area">
+        <div class="header">
+            <a href="https://www.juhe.cn" target="_blank">
+                <img src="https://www.juhe.cn/themes/v5/public/images/loginlogo.png">
+            </a>
+            <h1>天气应用</h1>
+        </div>
+    </div>
+    <div>
+        <p>{{result.today.city}}</p>
+        <p>{{result.today.week}}</p>
+        <p>{{result.today.date_y}}</p>
+    </div>
+    <hr>
+    <div class="today">
+        <h2>今天天气</h2>
+        <p>{{ result.today.weather }}</p>
+        <p>{{ result.today.temperature }}</p>
+        <p>湿度：{{ result.sk.humidity }}</p>
+        <p>{{ result.today.wind }}</p>
+        <p>穿衣指数：{{ result.today.dressing_index }}</p>
+        <p>洗车指数：{{ result.today.wash_index }}</p>
+        <p>旅行指数：{{ result.today.travel_index }}</p>
+        <p>晨练指数：{{ result.today.exercise_index }}</p>
+        <p>紫外线强度：{{ result.today.uv_index }}</p>
+    </div>
+    <hr>
+    <div class="after">
+        <h2>未来6天天气</h2>
+        <div class="box">
+            <div class="col-md-2 col-sm-4" v-for="day in result.future" v-if="day.week">
+                <h4>{{day.week}}</h4>
+                <p>{{day.temperature}}</p>
+                <p>{{day.weather}}</p>
+                <p>{{day.wind}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="vue.min.js"></script>
+<script src="../jquery.min.js"></script>
+<script>!window.jQuery && document.write('<script src="//cdn.bootcss.com/vue/1.0.24/vue.min.js"><\/script>');</script>
+<script>!window.jQuery && document.write('<script src="//cdn.bootcss.com/jquery/3.0.0-rc1/jquery.min.js"><\/script>');</script>
+<script src="script.js"></script>
+</body>
+</html>

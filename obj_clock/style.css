@@ -1,0 +1,107 @@
+body,html{
+    margin: 0;
+    padding: 0;
+    background: #16a085;
+    color: #ffffff;
+    /*text-shadow: 1px 1px 1px rgba(1,1,1,0.3);*/
+    text-align: center;
+    font-weight: 100;
+    font-size: 12px;
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+p{
+    margin: 0;
+    padding: 0;
+}
+h2{
+    text-transform: uppercase;
+}
+h4{
+    font-weight: 200;
+    text-transform: uppercase;
+}
+a::selection {
+    background: none;
+}
+a::-moz-selection{
+    background: none;
+}
+.main{
+    margin: 3rem auto;
+}
+.main .clock .controller {
+    width: 30rem;
+    margin: 0 auto;
+}
+.break, .session {
+    display: inline-block;
+    width: 48%;
+}
+.btn-box span, .btn-box>a{
+    width: 20%;
+    display: inline-block;
+    height: 3rem;
+    line-height: 3rem;
+}
+.btn-box>a{
+    font-size: 2rem;
+    font-weight: 300;
+}
+.btn-box>a:hover{
+    cursor: pointer;
+}
+.btn-box span{
+    font-size: 3rem;
+}
+.main .clock .show {
+    color: #ffffff;
+    font-size: 2rem;
+
+    border: 2px solid #c1e2b3;
+    width: 25rem;
+    height: 25rem;
+    margin: 2rem auto;
+
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    overflow: hidden;
+
+    position: relative;
+}
+.show::after{
+    border: 4px solid #16a085;
+    border-radius: 50%;
+    content: "";
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    position: absolute;
+    z-index: 2;
+}
+.main .clock .show>div{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+}
+.main .clock .show>div .title{
+    margin-top: 6rem;
+    font-size: 3rem;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+.main .clock .show>div .time{
+    margin-top: 3rem;
+    font-size: 5rem;
+}
+.main .clock .show .background{
+    width: 100%;
+    height: 0;
+    background: rgba(220,20,60,0.7);
+    position: absolute;
+    bottom: 0;
+
+    display: block;
+}

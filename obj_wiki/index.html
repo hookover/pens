@@ -1,0 +1,35 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+<div class="main">
+    <p>
+        <a target="_blank" href="http://en.wikipedia.org/wiki/Special:Random">Click here for a random article</a>
+    </p>
+    <div class="from">
+        <input type="text" class="hidden">
+        <div class="close"></div>
+    </div>
+    <p id="tip">Click icon to search</p>
+</div>
+
+<div class="data hidden">
+    <ul>
+        <li v-for="article in query.pages ">
+            <h3><a href="{{baseUrl + article.pageid}}" target="_blank">{{article.title}}</a></h3>
+            <p>
+                <a href="{{baseUrl + article.pageid}}" target="_blank">{{article.extract}}</a>
+            </p>
+        </li>
+    </ul>
+</div>
+<script src="vue.min.js"></script>
+<script src="../jquery.min.js"></script>
+<script>!window.jQuery && document.write('<script src="//cdn.bootcss.com/vue/1.0.24/vue.min.js"><\/script>');</script>
+<script>!window.jQuery && document.write('<script src="//cdn.bootcss.com/jquery/3.0.0-rc1/jquery.min.js"><\/script>');</script>
+<script src="script.js"></script>
+</body>
+</html>

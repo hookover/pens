@@ -1,0 +1,253 @@
+body,html,ul,p,h1,h2,h3,h4,h5,h6{
+    margin: 0;
+    padding: 0;
+    font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+ul li{ list-style: none; }
+.left{ float: left; }
+.right{ float: right; }
+.btn i{
+    margin-right: 1rem;
+}
+.btn{
+    padding: 10px 20px;
+    background: #ffffff;
+    border: 1px outset #101010;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: #000;
+    text-decoration: none;
+}
+.btn-block{
+    background-color: #cccccc;
+    font-size: 1.5rem;
+    border: 2px outset #000;
+    text-shadow: 1px 1px 1px #000;
+    box-shadow: 1px 1px 1px #000;
+}
+.btn-block:hover{
+    background: #000000;
+    border: 2px outset rgba(0, 0, 0, 0.9);
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+    transform: scale(1.1);
+    transition: all 0.2s ease 0s;
+}
+/*大屏*/
+/*@media (min-width: 768px) {*/
+    .nav{
+        height: 50px;
+        line-height: 50px;
+        background: #aaaaaa;
+    }
+    .nav .navbar li{
+        float: left;
+    }
+    .nav .navbar li a{
+        display: block;
+        padding: 0 15px;
+        text-decoration: none;
+        color: #101010;
+        font-weight: bold;
+    }
+    .nav .container{
+        width: 90%;
+        height: 100%;
+        margin: 0 auto;
+        background: #cccccc;
+    }
+    .nav .container .logo li{
+        border-bottom: 2px solid #9d9d9d;
+        height: 48px;
+    }
+    .nav .container .logo li:hover{
+        background: #e5e5e5;
+    }
+    .nav .container .list li{
+        background: #b2b2b2;
+    }
+    .nav .container .list li:hover{
+        background: #e5e5e5;
+    }
+/*}*/
+/* 小屏 */
+@media (max-width: 768px) {
+
+}
+
+section {
+
+}
+section .banner{
+    background-image: url('https://40.media.tumblr.com/1b916597d3e174399cb7adadddb66ede/tumblr_nt5uk4psl31ud7rr3o1_1280.jpg');
+    background-repeat: no-repeat;
+    height: 900px;
+    text-align: center;
+    background-attachment: fixed;
+}
+section .banner .content{
+    padding-top: 20%;
+    width: 80%;
+    margin: 0 auto;
+}
+section .banner .content h1{
+    font-size:4rem;
+    color: #d4d4d4;
+    text-shadow: 1px 2px 2px #000;
+}
+section .banner .content h2{
+    margin: 2rem 0;
+    text-shadow: 1px 1px 1px #000;
+}
+section .banner .content hr{
+    border: 1px outset rgba(255, 255, 255, 0.2);
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.6);
+}
+section .banner .content .box{
+    margin-top: 5%;
+}
+section .banner .content .box li{
+    display: inline-block;
+}
+section .design{
+    background: fixed url("https://41.media.tumblr.com/eb2382a5a4c996cfdab27bc0d1eb51ff/tumblr_nt5umxS1FY1ud7rr3o1_1280.jpg") no-repeat;
+    height: 650px;
+}
+section .design .content{
+    width: 80%;
+    margin: 0 auto;
+    font-size: 1.7rem;
+}
+section .design .content>div{
+    width: 50%;
+    display: inline-block;
+    margin-top: 10%;
+}
+section .design .content>div:first-child>div{
+    margin-top:2rem;
+}
+section .design .content>div:first-child>div a{
+    color: #ffffff;
+    text-decoration: none;
+}
+section .design .content>div:last-child{
+    float: right;
+}
+section .design .content>div:last-child img{
+    margin-top: 10rem;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    -webkit-box-shadow: 1px 1px 1px #aaa;
+    -moz-box-shadow: 1px 1px 1px #aaa;
+    box-shadow: 1px 1px 1px #aaa;
+}
+
+section .product{
+    background: fixed url('https://41.media.tumblr.com/92e61775d4c3edcc5145936e3703d125/tumblr_nt5uo9fH9y1ud7rr3o1_1280.jpg') no-repeat;
+    -webkit-background-size: 100%;
+    background-size: 100%;
+    height: 900px;
+}
+section .product .container{
+    width:90%;
+    height: 100%;
+    margin: 0 auto;
+}
+section .product .container h1,h3{
+    text-align: center;
+    margin: 20px;
+}
+section .product .container h1{
+    font-size: 3rem;
+}
+section .product .container h3{
+    font-size: 1.7rem;
+}
+section .product .container .list{
+
+}
+section .product .container .list .row{
+    margin-top: 1rem;
+}
+section .product .container .list .node{
+    width: 32.9%;
+    /*float: left;*/
+    display: inline-block;
+    background: rgba(0,0,0,0.2);
+    border:1px outset #000000;
+}
+section .product .container .list .node >div:first-child{
+    width:92%;
+    margin: 0 auto;
+}
+section .product .container .list .node img{
+    width: 100%;
+}
+section .product .container .list .node .title{
+    margin-top: -0.3rem;
+    text-align: center;
+    height: 5rem;
+    background: #000000;
+    color: #ffffff;
+}
+section .product .container .list .node .title h4{
+    padding-top: 1rem;
+    font-size:1.3rem;
+}
+section .contact{
+    background: fixed url('https://41.media.tumblr.com/ac46aa24b44b5036e9200abb71f810d9/tumblr_nt5vzxV6Us1ud7rr3o1_1280.jpg') no-repeat;
+    height: 500px;
+}
+section .contact .container{
+    background: rgba(255,255,255,0.2);
+    height: 100%;
+}
+section .contact .container div{
+    width: 90%;
+    height: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+}
+section .contact .container div div{
+    display: inline-block;
+}
+section .contact .container div div:first-child{
+    margin-top: 4rem;
+    width: 50%;
+    font-size: 2.2rem;
+}
+section .contact .container div div:last-child{
+    width: 49%;
+    text-align: right;
+}
+section .contact .container ul li{
+    margin-top: 2.5rem;
+}
+footer{
+    background: #e3e3e3;
+    height: 10rem;
+}
+footer div .container{
+    width: 90%;
+    margin: 0 auto;
+}
+footer .link ul li{
+    display: inline-block;
+    height: 5rem;
+    line-height: 5rem;
+    /*padding-right: 10px;*/
+}
+footer .link ul li:after{
+    content: '  .  ';
+}
+footer .link ul li:last-child:after{
+    content: '';
+}
+footer .link ul li a{
+    color: dodgerblue;
+    text-decoration: none;
+}

@@ -1,0 +1,57 @@
+body,html{
+    margin: 0;
+    padding: 0;
+}
+.btn{
+    border: 1px solid;
+    padding: 0.3rem 3rem;
+    -webkit-border-radius: 0.3rem;
+    -moz-border-radius: 0.3rem;
+    border-radius: 0.3rem;
+}
+.btn:hover{
+    cursor: pointer;
+}
+.btn-danger{
+    color: #d43f3a;
+    border: 1px solid #d43f3a;
+}
+.btn-success{
+    color: #398439;
+    border: 1px solid #398439;
+}
+.dm{
+    width: 100%;
+}
+.dm .screen{
+    margin: 1rem;
+    height: 350px;
+    border: 1px solid #e3e3e3;
+    border-radius: 5px;
+}
+.dm .show{
+    position:relative;
+    height: 100%;
+    overflow: hidden;
+}
+.dm .show > div{
+    display: inline-block;
+    position: absolute;
+    font-size: 1.5rem;
+    width: 100%;
+}
+.dm .action{
+    text-align: center;
+}
+.dm .action div{
+    margin: 1rem;
+}
+.dm .action .in input{
+    width: 50%;
+    height: 2rem;
+    padding-left: 1rem;
+    -webkit-border-radius: 0.3rem;
+    -moz-border-radius: 0.3rem;
+    border-radius: 0.3rem;
+    border: 1px solid #e3e3e3;
+}

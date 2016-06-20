@@ -1,0 +1,22 @@
+{
+  "name": "css0to1",
+  "version": "0.0.0",
+  "description": "css0to1 starter kit",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hayeah/fork2-css-lesson-starter.git"
+  },
+  "author": "Howard Yeh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hayeah/fork2-css-lesson-starter/issues"
+  },
+  "homepage": "https://github.com/hayeah/fork2-css-lesson-starter",
+  "dependencies": {
+    "browser-sync": "^2.7.1"
+  }
+}

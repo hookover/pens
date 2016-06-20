@@ -1,0 +1,61 @@
+html,body{
+    margin: 0;
+    padding: 0;
+}
+a{
+    text-decoration: none;
+}
+
+body {
+    background: #122b40;
+    height: 100%;
+    color: #122b40;
+}
+.man{
+    padding: 4rem;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background: #ffffff;
+    width: 450px;
+    margin: 15% auto auto;
+}
+.man .quote .content i{
+    margin: 0.5rem;
+}
+.man .quote .content{
+    font-size: 2rem;
+    text-align: center;
+}
+.man .quote .author{
+    text-align: right;
+    font-weight: 100;
+}
+.man .quote .author:before{
+    content: ' -- ';
+}
+.btn{
+    background: #122b40;
+    color: #ffffff;
+    border: none;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 0 0.8rem;
+    height: 2.6rem;
+    line-height: 2.6rem;
+    font-size: 1rem;
+}
+.man .quote .button{
+    margin-top: 2rem;
+}
+.man .quote .button a{
+    float: left;
+    margin-right: 0.5rem;
+    width: 1.5rem;
+    text-align: center;
+}
+.man .quote .button button{
+    float: right;
+    cursor: pointer;
+}

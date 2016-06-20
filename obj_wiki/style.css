@@ -1,0 +1,157 @@
+body,html,ul{
+    margin: 0 auto;
+    padding: 0;
+    background: #16a085;
+    color: #ffffff;
+}
+.main a{
+    text-decoration: none;
+    color: #ffffff;
+}
+.main{
+    margin: 10% auto;
+    text-align: center;
+}
+.main .from{
+    border: 2px solid #c1e2b3;
+    width: 2rem;
+    height: 2rem;
+    margin: 0 auto;
+    border-radius: 1.1rem;
+    cursor: pointer;
+    position: relative;
+
+    transition: width 0.2s;
+    -moz-transition: width 0.2s; /* Firefox 4 */
+    -webkit-transition: width 0.2s; /* Safari 和 Chrome */
+    -o-transition: width 0.2s; /* Opera */
+}
+.main .from:before{
+
+    content: '';
+    width:1rem;
+    height: 0.12rem;
+    background: #c1e2b3;
+    display: block;
+    font-weight: bold;
+    position: absolute;
+    color: #c1e2b3;
+    bottom: 0.1rem;
+    right: 0.2rem;
+
+    transition: width 0.15s ease 0.55s;
+    -moz-transition: width 0.15s ease 0.55s; /* Firefox 4 !*/
+    -webkit-transition: width 0.15s ease 0.55s; /* Safari 和 Chrome !*/
+    -o-transition: width 0.15s ease 0.55s; /* Opera !*/
+
+    -webkit-transform: rotate(220deg);
+    -moz-transform: rotate(220deg);
+    -ms-transform: rotate(220deg);
+    -o-transform: rotate(220deg);
+    transform: rotate(220deg);
+
+    -webkit-transform-origin: top right;
+    -moz-transform-origin: top right;
+    -ms-transform-origin: top right;
+    -o-transform-origin: top right;
+    transform-origin: top right;
+}
+.main .open {
+    width: 18rem;
+    transition: width 0.2s;
+    -moz-transition: width 0.2s; /* Firefox 4 */
+    -webkit-transition: width 0.2s; /* Safari 和 Chrome */
+    -o-transition: width 0.2s; /* Opera */
+}
+.main .open::before{
+    width: 0;
+    -webkit-transition-delay: 0s;
+    -moz-transition-delay: 0s;
+    transition-delay: 0s;
+}
+.hidden{
+    display: none;
+}
+.main .from input{
+    border: none;
+    height: 100%;
+    width: 100%;
+    line-height: 2rem;
+    background: #16a085;
+    color: white;
+    font-size: 1.2rem;
+    -webkit-border-radius: 1rem;
+    -moz-border-radius: 1rem;
+    border-radius: 1rem;
+    padding: 0 1rem 0 1rem;
+}
+.main .open .close:before{
+    width: 1rem;
+    -webkit-transition-delay: 0.25s;
+    -moz-transition-delay: 0.25s;
+    transition-delay: 0.25s;
+}
+.main .open .close:after{
+    width: 1rem;
+    -webkit-transition-delay: 0s;
+    -moz-transition-delay: 0s;
+    transition-delay: 0s;
+}
+.close{
+    position: absolute;
+    top: 50%;
+    right: 0;
+    z-index: 9999;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+.close:before,.close:after{
+    width: 0;
+    content: '';
+    display: block;
+    border-bottom: 2px solid #c1e2b3;
+    font-weight: bold;
+    position: absolute;
+    color: #c1e2b3;
+    top: 50%;
+    right: 25%;
+    transition: width 0.01s;
+}
+.close:before{
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.close:after{
+    -webkit-transform: rotate(135deg);
+    -moz-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    -o-transform: rotate(135deg);
+    transform: rotate(135deg);
+}
+.data{
+    width: 90%;
+    margin: 0 auto;
+}
+.data ul li{
+    list-style: none;
+    border: 1px solid;
+    background: #ffffff;
+    padding: 0 1rem;
+    margin: 1rem;
+}
+.data ul li a{
+    color: #16a085;
+    text-decoration: none;
+}
+.data ul li:hover a{
+    color: #16a0b5;
+}
