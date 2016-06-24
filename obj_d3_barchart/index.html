@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font: 15px sans-serif;
+    background-color: #77B1A9;
+}
+
+#main {
+    margin-top: 4rem;
+    text-align: center;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #2c3e50;
+    stroke-width: 2px;
+}
+
+.description {
+    font-size: 0.6rem;
+    text-align: center;
+}
+.bar{
+    fill: #2c3e50;
+}
+.d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+}
+
+.d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+}
+
+.d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+}
+</style>
+
+<body>
+    <div id='main'></div>
+    <script src="//cdn.bootcss.com/d3/3.5.17/d3.min.js"></script>
+    <script src="//cdn.bootcss.com/d3-tip/0.6.7/d3-tip.min.js"></script>
+    <script>
+    var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    var margin = {
+            left: 80,
+            right: 10,
+            top: 20,
+            bottom: 80
+        },
+        width = 1024 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+    var svg = d3.select('#main')
+        .append('svg')
+        .attr({
+            width: width + margin.left + margin.right,
+            height: height + margin.top + margin.bottom
+        });
+    var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+            return "<span style='color:red'>" + d3.format("$,.2f")(d[1]) + "</span><strong>&nbsp;Billion </strong><br/>" + (new Date(d[0])).getFullYear() + '-' + months[(new Date(d[0])).getMonth()];
+        })
+    d3.json('gdp.json', function(error, jsonData) {
+        var data = jsonData.data;
+        var bar_width = width / (data.length + 0);
+
+        var max = data.reduce((arr, curr) => Math.max(arr, curr[1]), 0);
+        var scale_y = d3.scale.linear()
+            .domain([0, max])
+            .range([height, 0]);
+
+        var xMin = new Date(data[0][0]);
+        var xMax = new Date(data[data.length - 1][0]);
+
+        var scale_x = d3.time.scale()
+            .domain([xMin, xMax])
+            .range([0, width]);
+
+        var xAxis = d3.svg.axis()
+            .scale(scale_x)
+            .orient('bottom')
+            .ticks(d3.time.years, 5);
+
+        var yAxis = d3.svg.axis()
+            .scale(scale_y)
+            .orient('left');
+
+        var bar = svg.selectAll('g')
+            .data(data)
+            .enter()
+            .append('g')
+            .append('rect')
+            .attr('transform', 'translate(' + margin.left + ',' + margin.right + ')')
+            .attr('x', function(d) {
+                return scale_x(new Date(d[0]));
+            })
+            .attr('y', function(d) {
+                return scale_y(d[1]);
+            })
+            .attr({
+                'width': bar_width,
+                'height': function(d) {
+                    return height - scale_y(d[1]);
+                }
+            })
+            .attr('class', 'bar')
+            .call(tip)
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide);
+
+        //添加x轴
+        svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(" + margin.left + "," + (height + margin.top + 10) + ")")
+            .call(xAxis);
+        //添加y轴
+        svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(" + (margin.left-10) + "," + (margin.top -10)+ ")")
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("dy", "1em")
+            .text("Gross Domestic Product, USA")
+            .style("text-anchor", "end");
+
+        svg.append('g')
+            .attr('transform', 'translate(' + (margin.left + margin.right * 3) + ',' + (height + margin.bottom) + ')')
+            .append("text")
+            .text(jsonData.description)
+            .attr('class', 'description');
+        svg.append('g')
+            .append('text')
+            .text('Hello every body. https://github.com/baoniu')
+            .attr('transform','translate('+height / 2+','+ height/3 +')')
+    });
+    </script>
+</body>
+<html>
