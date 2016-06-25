@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font: 15px sans-serif;
+        background-color: #77B1A9;
+        background-image: url('http://1.bp.blogspot.com/_W6PdCSPYbOM/TBAOi-mfW2I/AAAAAAAABNI/sXOOLguJI80/s1600/Alpe+d+Huez+2007+2.jpg');
+        background-repeat: no-repeat;
+    }
+
+    #main {
+        margin-top: 4rem;
+        text-align: center;
+    }
+    #main svg{
+        background: rgba(255,255,255,0.7);
+    }
+    .label{
+        font-size: 0.6rem;
+    }
+    .points{
+        cursor: pointer;
+    }
+    .points:hover{
+        stroke: #000;
+        stroke-width: 1px;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #2c3e50;
+        stroke-width: 2px;
+    }
+    .bar:hover{
+        fill: #fff;
+    }
+    .d3-tip {
+        line-height: 1;
+        font-weight: bold;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        border-radius: 2px;
+    }
+
+    .d3-tip:after {
+        box-sizing: border-box;
+        display: inline;
+        font-size: 10px;
+        width: 100%;
+        line-height: 1;
+        color: rgba(0, 0, 0, 0.8);
+        content: "\25BC";
+        position: absolute;
+        text-align: center;
+    }
+
+    .d3-tip.n:after {
+        margin: -1px 0 0 0;
+        top: 100%;
+        left: 0;
+    }
+</style>
+
+<body>
+<div id='main'></div>
+<script src="//cdn.bootcss.com/d3/3.5.17/d3.min.js"></script>
+<script src="//cdn.bootcss.com/d3-tip/0.6.7/d3-tip.min.js"></script>
+<script>
+    var margin = {
+                left: 60,
+                right: 0,
+                top: 80,
+                bottom: 60
+            },
+            width = 800 - margin.left - margin.right,
+            height = 550 - margin.top - margin.bottom;
+    var svg = d3.select('#main')
+            .append('svg')
+            .attr({
+                width: width + margin.left + margin.right,
+                height: height + margin.top + margin.bottom
+            });
+
+    var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function(d) {
+                return  'Ranking: ' + d.Place + '<br/>' +
+                        d.Name + ": " + d.Nationality +'<br/>' +
+                        'Year: ' + d.Year + ',Time: ' + d.Time +'<br/><br/>' +
+                        '<div style="max-width:20rem;">' + (d.Doping ? d.Doping : 'No doping allegations') + '</div>';
+            });
+    var formatMinutes = function(d) {
+        var hour = Math.floor(d / 60);
+        var minute = d % 60;
+        return hour + ':' + minute;
+    };
+    d3.json('data.json', function(error, jsonData) {
+        var data = jsonData.alps;
+
+        var max = data.reduce((arr, curr) => Math.max(arr, curr.Seconds), 0);
+        var min = max;
+        data.forEach(function (v) {
+            if (v.Seconds < min) {
+                min = v.Seconds;
+            }
+        });
+        var scale_x = d3.scale.linear()
+                .domain([max+20, min-20])
+                .range([margin.left, width]);
+
+        var scale_y = d3.scale.linear()
+                .domain([0, data.length])
+                .range([0, height]);
+
+        var xAxis = d3.svg.axis()
+                .scale(scale_x)
+                .orient('bottom')
+                .ticks(5)
+                .tickFormat(formatMinutes)
+                ;
+
+        var yAxis = d3.svg.axis()
+                .scale(scale_y)
+                .orient('left');
+
+        var points = svg.selectAll("circle")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("transform", "translate(0,"+(margin.top -10)+")")
+                .attr("cx", function(d) {
+                    return scale_x(d.Seconds);
+                })
+                .attr("cy", function(d) {
+                    return scale_y(d.Place);
+                })
+                .attr("r", 5)
+                .attr("fill", function(d) {
+                    if (d.Doping == "") {
+                        return "#333";
+                    }
+                    return "#f44";
+                })
+                .attr('class','points')
+                .call(tip)
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide);
+
+        var label = svg.selectAll("text")
+                .data(data)
+                .enter()
+                .append("text")
+                .text(function(d) {
+                    return d.Name;
+                })
+                .attr("x", function(d) {
+                    return scale_x(d.Seconds);
+                })
+                .attr("y", function(d) {
+                    return scale_y(d.Place);
+                })
+                .attr("transform", "translate(10,"+(margin.top -8)+")")
+                .attr('class','label');
+
+        //添加x轴
+        svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(0,"+(height+margin.top)+")")
+                .call(xAxis);
+        //添加y轴
+        svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(" + (margin.left-10) + "," + (margin.top -10)+ ")")
+                .call(yAxis)
+                .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("dy", "-2em")
+                .text("Ranking")
+                .style("text-anchor", "end");
+
+
+        svg.append('g')
+                .append('text')
+                .text('Minutes Behind Fastest Time')
+                .attr('x', (width/2))
+                .attr('y', (height + margin.top + margin.bottom / 1.5))
+                .attr('text-anchor','middle');
+//                .attr('transform','translate('+width/3+','+(margin.top + height + margin.bottom /1.5)+')')
+
+        svg.append('text')
+                .text("35 Fastest times up Alpe d'Huez")
+                .attr("x", (width / 2))
+                .attr("y", (margin.top / 2 ))
+                .attr("text-anchor", "middle")
+                .style('font-size','1.5rem')
+                .style('text-shadow','0 1px 1px rgba(0,0,0,0.2)')
+        ;
+        svg.append('text')
+                .text("Normalized to 13.8km distance")
+                .attr("x", (width / 2))
+                .attr("y", ((margin.top ) / 2 + 20))
+                .attr("text-anchor", "middle")
+                .style('font-size','1rem')
+                .style('text-shadow','0 1px 1px rgba(0,0,0,0.2)')
+        ;
+    });
+</script>
+</body>
+<html>
