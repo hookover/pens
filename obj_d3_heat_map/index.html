@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font: 15px sans-serif;
+        background-color: #77B1A9;
+        background-repeat: no-repeat;
+        font-family: Roboto, sans-serif;
+    }
+
+    #main {
+        margin-top: 0.5rem;
+        text-align: center;
+    }
+    #main svg{
+        background: rgba(255,255,255,0.3);
+        box-shadow: 1px 1px 8px #092B40;
+    }
+    .axis{
+        fill: #fff;
+        font-size: 0.8rem;
+        font-weight: 100;
+        text-align: center;
+    }
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #9b59b6;
+        stroke-width: 2px;
+    }
+    .bar:hover{
+        fill: #fff;
+    }
+    .d3-tip {
+        line-height: 1;
+        font-weight: bold;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        border-radius: 2px;
+    }
+
+    /*.d3-tip:after {*/
+    /*box-sizing: border-box;*/
+    /*display: inline;*/
+    /*font-size: 10px;*/
+    /*width: 100%;*/
+    /*line-height: 1;*/
+    /*color: rgba(0, 0, 0, 0.8);*/
+    /*content: "\25BC";*/
+    /*position: absolute;*/
+    /*text-align: center;*/
+    /*}*/
+
+    /*.d3-tip.n:after {*/
+    /*margin: -1px 0 0 0;*/
+    /*top: 100%;*/
+    /*left: 0;*/
+    /*}*/
+</style>
+
+<body>
+<div id='main'></div>
+<script src="//cdn.bootcss.com/d3/3.5.17/d3.min.js"></script>
+<script src="//cdn.bootcss.com/d3-tip/0.6.7/d3-tip.min.js"></script>
+<script>
+    var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var colors = ["#5e4fa2", "#3288bd", "#66c2a5", "#abdda4", "#e6f598", "#ffffbf", "#fee08b", "#fdae61", "#f46d43", "#d53e4f", "#9e0142"];
+
+    var margin = {
+                left: 150,
+                right: 0,
+                top: 100,
+                bottom: 100
+            },
+            width = Math.round(1200 - margin.left - margin.right),
+            height = Math.round(600 - margin.top - margin.bottom);
+    var svg = d3.select('#main')
+            .append('svg')
+            .attr({
+                width: Math.round(width + margin.left + margin.right),
+                height: Math.round(height + margin.top + margin.bottom)
+            });
+
+
+
+    d3.json('data.json', function(error, jsonData) {
+        var data = jsonData.monthlyVariance;
+        var tip = d3.tip()
+                .attr('class', 'd3-tip')
+                .offset([-10, 0])
+                .html(function(d) {
+                    return '<div style="text-align: center;">' + d.year +' - ' + month[d.month -1] + '<br/>' +
+                            Math.round((jsonData.baseTemperature + d.variance)*1000) / 1000 + '<br/>' +
+                            d.variance +
+                            '</div>';
+                });
+
+        var maxVariance = data.reduce((arr, curr) => Math.max(arr, curr.variance), 0);
+        var minVariance = maxVariance;
+        data.forEach(function (v) {
+            if (v.variance < minVariance) {
+                minVariance = v.variance;
+            }
+        });
+        var scale_color = d3.scale.quantile()
+                .domain([minVariance + jsonData.baseTemperature, maxVariance + jsonData.baseTemperature])
+                .range(colors);
+
+        var maxYear = data.reduce((arr, curr) => Math.max(arr, curr.year), 0);
+        var minYear = maxYear;
+        data.forEach(function (v) {
+            if (v.year < minYear) {
+                minYear = v.year;
+            }
+        });
+        var scale_x = d3.scale.linear()
+                        .domain([minYear, maxYear])
+                        .range([margin.left, width]);
+
+        var scale_y = d3.scale.linear()
+                        .domain([0, month.length])
+                        .range([0, height]);
+
+        var xAxis = d3.svg.axis()
+                        .scale(scale_x)
+                        .orient('bottom')
+                        .ticks(10)
+                        .tickFormat(function (v) {
+                            return ''+v;
+                        });
+
+        var yAxis = d3.svg.axis()
+                .scale(scale_y)
+                .orient('left')
+                .tickFormat(function (v) {
+                    return month[v];
+                });
+
+        var oneDataHeight = height / month.length;
+        var oneDataWidth = width / (maxYear - minYear);
+        //添加全部数据
+        svg.selectAll('g')
+                .data(data)
+                .enter()
+                .append('g')
+                .append('rect')
+                .attr('x', function(d) {
+                    return scale_x(d.year);
+                })
+                .attr('y', function(d) {
+                    return scale_y(d.month -1) + margin.top;
+                })
+                .attr({
+                    'width': oneDataWidth,
+                    'height': oneDataHeight
+                })
+                .style('fill',function(d){ return scale_color(d.variance + jsonData.baseTemperature); })
+                .call(tip)
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide);
+
+        //添加颜色示样
+        var colorWidth = 30;
+        svg.selectAll('.color')
+                .data(colors)
+                .enter()
+                .append('rect')
+                .attr('x', function (d,i) {
+                        return width - (colorWidth * colors.length)+ i * colorWidth;
+                })
+                .attr('y', margin.top + height + margin.bottom / 3)
+                .attr({
+                    width: colorWidth,
+                    height: 20
+                })
+                .style("fill", function(d, i) {
+                    return colors[i];
+                });
+
+        //添加颜色标签
+        svg.selectAll("text")
+                .data(colors)
+                .enter()
+                .append("text")
+                .attr("class", "axis")
+                .text(function(d, i) {
+                    if(i==0) return 0;
+                    return Math.floor(scale_color.quantiles(d)[i - 1] * 10) / 10;
+                })
+                .attr("x", function(d, i) {
+                    return width - (colorWidth * colors.length)+ i * colorWidth + 5;
+                })
+                .attr('y', margin.top + height + margin.bottom / 3 + 35);
+
+        //添加x轴
+        svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(0,"+(height+margin.top)+")")
+                .call(xAxis)
+                .append('text')
+                .text('Years')
+                .attr('x', (width+margin.left + margin.right) / 2)
+                .attr('y', margin.bottom / 2)
+                .style('font-size', '1.2rem')
+                .attr("text-anchor", "middle");
+        //添加y轴
+        svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(" + (margin.left) + "," + (margin.top)+ ")")
+                .call(yAxis)
+                .append('text')
+                .text('Month')
+                .style('font-size', '1.2rem')
+                .attr('transform', 'rotate(-90)')
+                .attr("x",  - height / 2)
+                .attr("y", - margin.left / 2)
+                .attr("text-anchor", "middle")
+                ;
+        //添加表头
+        svg.append('g')
+                .append('text')
+                .text('Monthly Global Land-Surface Temperature')
+                .attr('x', width / 2 + margin.left / 2)
+                .attr('y', margin.top / 4)
+                .attr("text-anchor", "middle")
+                .style({
+                    'font-size': '1.5rem',
+                    'font-weight': 'bold'
+                });
+        svg.append('g')
+                .append('text')
+                .text('1753 - 2015')
+                .attr('x', width / 2 + margin.left / 2)
+                .attr('y', margin.top / 2)
+                .attr("text-anchor", "middle")
+                .style({
+                    'font-size': '1.3rem',
+                    'font-weight': 'bold',
+                    'fill': '#444'
+                });
+        svg.append('g')
+                .append('text')
+                .text('Temperatures are in Celsius and reported as anomalies relative to the Jan 1951-Dec 1980 average.')
+                .attr('x', width / 2 + margin.left / 2)
+                .attr('y', margin.top / 1.5)
+                .attr("text-anchor", "middle")
+                .style({
+                    'font-size': '0.7rem',
+                    'fill': '#444'
+                });
+        svg.append('g')
+                .append('text')
+                .text('Estimated Jan 1951-Dec 1980 absolute temperature ℃: 8.66 +/- 0.07')
+                .attr('x', width / 2 + margin.left / 2)
+                .attr('y', margin.top/1.5 + 15)
+                .attr("text-anchor", "middle")
+                .style({
+                    'font-size': '0.7rem',
+                    'fill': '#444'
+                });
+    });
+</script>
+</body>
+<html>
