@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    body{
+        margin: 0;
+    }
+    svg {
+        background: #eee;
+    }
+    .sphere {
+        fill: rgb(31, 90, 163);
+    }
+    .land {
+        fill: rgb(1, 179, 202);
+    }
+    .boundary {
+        fill: none;
+        stroke: rgb(241, 221, 189);
+        stroke-linejoin: round;
+        stroke-linecap: round;
+        vector-effect: non-scaling-stroke;
+    }
+    .overlay {
+        fill: none;
+        pointer-events: all;
+    }
+</style>
+<script src="//cdn.bootcss.com/d3/3.5.17/d3.min.js"></script>
+<script src="//cdn.bootcss.com/d3-tip/0.6.7/d3-tip.min.js"></script>
+<script src="//cdn.bootcss.com/topojson/1.6.20/topojson.min.js"></script>
+<body>
+<div id="tip"></div>
+<script>
+    var width = document.body.offsetWidth || window.screen.availWidth || 1000,
+            height = window.screen.availHeight|| document.body.offsetHeight || 500,
+            scaleZoom = (width - 1) / 2 / Math.PI;
+
+    var color = d3.scale.category20();
+    var projection = d3.geo.mercator();
+
+    var zoom = d3.behavior.zoom()
+            .translate([width / 2, height / 2])
+            .scale(scaleZoom)
+            .scaleExtent([scaleZoom, 8 * scaleZoom])
+            .on("zoom", zoomed);
+
+    var path = d3.geo.path()
+            .projection(projection);
+    //创建画布
+    var svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g");
+
+    var g = svg.append("g");
+
+    //矩形填充
+    svg.append("rect")
+            .attr("class", "overlay")
+            .attr("width", width)
+            .attr("height", height);
+
+    svg
+            .call(zoom)
+            .call(zoom.event);
+    //加载地图数据
+    d3.json("world.json", function(error, world) {
+        if (error) throw error;
+        //背景
+        g.append("path")
+                .datum({type: "Sphere"})
+                .attr("class", "sphere")
+                .attr("d", path);
+        //大陆
+        g.append("path")
+                .datum(topojson.merge(world, world.objects.countries.geometries))
+                .attr("class", "land")
+                .attr("d", path);
+        ;
+        //国家分隔线
+        g.append("path")
+                .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
+                .attr("class", "boundary")
+                .attr("d", path);
+    });
+
+    function zoomed() {
+        projection
+                .translate(zoom.translate())
+                .scale(zoom.scale());
+
+        g.selectAll("path")
+                .attr("d", path);
+    }
+
+    var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function(d) {
+                return "fdsafsdafdsa";
+            });
+
+    // 地图结束, 陨石数据开始
+    d3.json('data.json', function (error, jsonData) {
+        max = jsonData.features.reduce((arr, curr) => Math.max(arr, Number(curr.properties.mass)), 0);
+        max /= 30;
+        circle_scale = d3.scale.linear()
+                .domain([0, max])
+                .range([2, 20]);
+        svg.append("g").selectAll('path')
+                .data(jsonData.features).enter()
+                .append("circle")
+                .attr("cx", function (d) {
+                    return projection([d.properties.reclong, d.properties.reclat])[0];
+                })
+                .attr("cy", function (d) {
+                    return projection([d.properties.reclong, d.properties.reclat])[1];
+                })
+                .attr('r', function(d) {
+                    var cw = circle_scale(d.properties.mass);
+                    return cw > 20 ? 25 : cw;
+                })
+                .attr("fill", function (d) {
+                    return color(d.properties.mass)
+                })
+                .style('opacity',function(d){
+                    var op = circle_scale(d.properties.mass) / 100;
+                    return (op + 0.8) > 1 ? 0.95 : op+0.8;
+                })
+                .style({
+                    'stroke': '#eee',
+                    'stroke-width': '0.5',
+                    'cursor': 'pointer'
+                })
+                .on("mouseover", function(d) {
+                    d3.select("#tip").style("display", "block");
+                    d3.select("#tip").html(
+                            "fall:" + d.properties.fall + '<br/>' +
+                            "mass:" + d.properties.mass + '<br/>' +
+                            "name:" + d.properties.name + '<br/>' +
+                            "nametype:" + d.properties.nametype + '<br/>' +
+                            "recclass:" + d.properties.recclass + '<br/>' +
+                            "reclat:" + d.properties.reclat + '<br/>' +
+                            "year:" + d.properties.year + '<br/>'
+                    )
+                            .style({
+                                "left": function (d) {
+                                    // 优化弹窗
+                                    if(d3.event.pageX + 150 > width){
+                                        return (d3.event.pageX - 300) + "px"
+                                    } else {
+                                        return (d3.event.pageX - 150) + "px"
+                                    }
+                                },
+                                "top": function (d) {
+                                    // top
+                                    if(d3.event.pageY - 190 > 1){
+                                        return (d3.event.pageY - 190) + "px"
+                                    } else {
+                                        return (d3.event.pageY + 15) + "px"
+                                    }
+                                }
+                            });
+                })
+                .on("mouseout", function (d) {
+                    d3.select("#tip").style("display", "none");
+                });
+        d3.select("#tip").style({
+            'display': 'none',
+            'padding': '1rem',
+            'border-radius': '5px',
+            'color': 'rgb(241, 221, 189)',
+            'text-shadow': '1px 1px 6px #555',
+            'font-size': '1.3rem',
+            'z-index': 999,
+            'position': 'absolute',
+            'background-color': 'rgba(255,255,255,0.3)'
+        });
+    });
+
+    d3.select(self.frameElement).style("height", height);
+
+    //下面代码待研究,
+
+    //        // prepare data for force layout
+    //        forceNodes = [];
+    //        for(i = 0 ; i < jsonData.features.length ; i++ ) {
+    //            forceNodes.push(jsonData.features[i].properties);
+    //        }
+    //        // force layout, makes circles closer.
+    //        // This is useful when circle radius changes.
+    //        force = d3.layout.force().gravity(3.0).size([width,height]).charge(-1).nodes(forceNodes);
+    //        // collision detection, prevents circles from overlapping each other
+    //        force.on("tick", function() {
+    //            for (i = 0; i < jsonData.features.length; i++) {
+    //                for (j = 0; j < jsonData.features.length; j++) {
+    //                    it = jsonData.features[i].properties;
+    //                    jt = jsonData.features[j].properties;
+    ////                    console.log(it, jt);
+    //                    if (i == j) continue; // not collide with self
+    //                    r = it.r + jt.r;    // it.c is the centroid of each county and initial position of circle
+    //                    itx = it.x + it.reclong;
+    //                    ity = it.y + it.reclat;
+    //                    jtx = jt.x + jt.reclong;
+    //                    jty = jt.y + jt.reclat;
+    //                    // distance between centroid of two circles
+    //                    d = Math.sqrt((itx - jtx) * (itx - jtx) + (ity - jty) * (ity - jty));
+    //                    if (r > d) {
+    //                        // there's a collision if distance is smaller than radius
+    //                        dr = ( r - d ) / ( d * 1 );
+    //                        it.x = it.x + ( itx - jtx ) * dr;
+    //                        it.y = it.y + ( ity - jty ) * dr;
+    //                    }
+    //                }
+    //            }
+    //        });
+    //        force.start();
+</script>
+
