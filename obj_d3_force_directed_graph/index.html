@@ -182,12 +182,15 @@
                             d3.select("#tip").html(d.country)
                                     .style({
                                         "left": (d.x - 40) + "px",
-                                        "top": (d.y - 30) + "px",
+                                        "top": (d.y - 40) + "px",
                                         "text-anchor": 'middle'
                                     })
                         })
                         .on("mouseout", function (d) {
                             d3.select("#tip").style("display", "none");
+                        })
+                        .style({
+                            'cursor': 'pointer'
                         })
                         .call(force.drag)
                 ;
