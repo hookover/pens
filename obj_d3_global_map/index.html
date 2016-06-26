@@ -96,17 +96,16 @@
                 .attr("d", path);
     }
 
-    var tip = d3.tip()
-            .attr('class', 'd3-tip')
-            .offset([-10, 0])
-            .html(function(d) {
-                return "fdsafsdafdsa";
-            });
 
     // 地图结束, 陨石数据开始
     d3.json('data.json', function (error, jsonData) {
-        max = jsonData.features.reduce((arr, curr) => Math.max(arr, Number(curr.properties.mass)), 0);
+        jsonData.features = jsonData.features.sort(function (a,b) {
+            return Number(a.properties.mass) < Number(b.properties.mass);
+        });
+        console.log(jsonData.features);
+        var max = jsonData.features.reduce((arr, curr) => Math.max(arr, Number(curr.properties.mass)), 0);
         max /= 30;
+
         circle_scale = d3.scale.linear()
                 .domain([0, max])
                 .range([2, 20]);
@@ -124,7 +123,7 @@
                     return cw > 20 ? 25 : cw;
                 })
                 .attr("fill", function (d) {
-                    return color(d.properties.mass)
+                    return color([d.properties.mass, d.properties.year])
                 })
                 .style('opacity',function(d){
                     var op = circle_scale(d.properties.mass) / 100;
