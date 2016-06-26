@@ -24,6 +24,9 @@
         fill: none;
         pointer-events: all;
     }
+    .hover:hover{
+        fill: rgba(0,0,0,0.5);
+    }
 </style>
 <script src="//cdn.bootcss.com/d3/3.5.17/d3.min.js"></script>
 <script src="//cdn.bootcss.com/d3-tip/0.6.7/d3-tip.min.js"></script>
@@ -132,6 +135,7 @@
                     'stroke-width': '0.5',
                     'cursor': 'pointer'
                 })
+                .attr('class','hover')
                 .on("mouseover", function(d) {
                     d3.select("#tip").style("display", "block");
                     d3.select("#tip").html(
