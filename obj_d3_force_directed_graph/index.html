@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font: 15px sans-serif;
+        background-color: #fff;
+        background-repeat: no-repeat;
+        font-family: Roboto, sans-serif;
+    }
+
+    #main {
+        margin-top: 1rem;
+        text-align: center;
+    }
+    #main svg{
+        /*background: rgba(255,255,255,0.3);*/
+        box-shadow: 1px 1px 8px #092B40;
+    }
+    .flag {
+        position: absolute;
+    }
+    #flags {
+        position: relative;
+        margin: 0 auto;
+        /*border: 1px solid #092B40;*/
+        text-align: center;
+        width: 800px;
+    }
+    .axis{
+        fill: #fff;
+        font-size: 0.8rem;
+        font-weight: 100;
+        text-align: center;
+    }
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #9b59b6;
+        stroke-width: 2px;
+    }
+    .node {
+        stroke: #fff;
+        stroke-width: 1.5px;
+    }
+
+    .link {
+        stroke: #999;
+        stroke-opacity: .6;
+    }
+    .flag {
+        position: absolute;
+    }
+    .d3-tip {
+        line-height: 1;
+        font-weight: bold;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        border-radius: 2px;
+    }
+
+    .d3-tip:after {
+        box-sizing: border-box;
+        display: inline;
+        font-size: 10px;
+        width: 100%;
+        line-height: 1;
+        color: rgba(0, 0, 0, 0.8);
+        content: "\25BC";
+        position: absolute;
+        text-align: center;
+    }
+
+    .d3-tip.n:after {
+        margin: -1px 0 0 0;
+        top: 100%;
+        left: 0;
+    }
+</style>
+<link rel="stylesheet" href="flags.css">
+<body>
+<div id='main'>
+    <div id="flags">
+        <div id="tip"></div>
+    </div>
+</div>
+<script src="//cdn.bootcss.com/d3/3.5.17/d3.min.js"></script>
+<!--<script src="//cdn.bootcss.com/d3-tip/0.6.7/d3-tip.min.js"></script>-->
+<!--<script src="tooltip.js"></script>-->
+<script>
+    var width = 800,
+            height = 500;
+
+    var color = d3.scale.category20();
+
+    var force = d3.layout.force()
+            .charge(-30)
+            .linkDistance(88)
+            .size([width, height]);
+
+    var svg = d3.select("#main").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+
+    //
+
+    d3.json("countries.json", function(error, jsonData) {
+        if (error) throw error;
+        console.log(jsonData);
+
+        force.nodes(jsonData.nodes)
+                .links(jsonData.links)
+                .start();
+
+        var link = svg.selectAll(".link")
+                .data(jsonData.links)
+                .enter().append("line")
+                .attr("class", "link")
+                .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+//        var tip = d3.tip()
+//                .attr('class', 'd3-tip')
+//                .offset([-10, 0])
+//                .html(function (d) {
+//                    return d.country;
+//                })
+//                .style({
+//                    'left': function(d){ return d.x +'px'; },
+//                    'top': function (d) { return d.y +'px'; }
+//                });
+        d3.select("#tip").style({
+            'display': 'none',
+            'padding': '0.5rem',
+            'border-radius': '2px',
+            'color': 'rgb(228, 36, 155)',
+            'z-index': 999,
+            'position': 'absolute',
+            'background-color': 'rgb(226, 245, 130)'
+        });
+//                .attr("class", "my-tooltip")//add the tooltip class
+//                .style("position", "absolute")
+//                .style("z-index", "10")
+//                .style("visibility", "hidden");
+//        tooltip.append("div")
+//                .attr("id", "tt-name")
+//                .text("simple");
+//        tooltip.append("div")
+//                .attr("id", "tt-size")
+//                .text("simple");
+
+        var node = svg.selectAll(".node")
+                .data(jsonData.nodes)
+                .enter()
+                .append("circle")
+                .attr("class", "node")
+                .attr("r", 3)
+                .style("fill", function(d) { return color(d.group); })
+
+//                .call(tip)
+//                .on('mouseover', tooltip.select("#tt-name").text(function(d) { return color(d.group); }))
+//                .on('mouseout', tip.hide)
+
+                .call(force.drag);
+
+
+
+        var flags = d3.select('#flags')
+                        .attr("width", width)
+                        .attr("height", height)
+                        .selectAll('.node')
+                        .data(jsonData.nodes)
+                        .enter()
+                        .append('img')
+                        .attr('class', function (d) {
+                            return 'flag flag-' + d.code;
+                        })
+                        .on("mouseover", function(d) {
+                            d3.select("#tip").style("display", "block");
+                            d3.select("#tip").html(d.country)
+                                    .style({
+                                        "left": (d.x - 40) + "px",
+                                        "top": (d.y - 30) + "px",
+                                        "text-anchor": 'middle'
+                                    })
+                        })
+                        .on("mouseout", function (d) {
+                            d3.select("#tip").style("display", "none");
+                        })
+                        .call(force.drag)
+                ;
+
+//    .on("mouseover", (d) => {
+//        tooltip.style("display", "block");
+//        tooltip.html(d.country)
+//                .style("left", d3.event.pageX + "px")
+//                .style("top", (d3.event.pageY - 28) + "px");
+//    })
+
+
+//        flags.append("title")
+//                .text(function(d) { return d.country; });
+
+        force.on("tick", function() {
+            link.attr("x1", function(d) { return d.source.x; })
+                    .attr("y1", function(d) { return d.source.y; })
+                    .attr("x2", function(d) { return d.target.x; })
+                    .attr("y2", function(d) { return d.target.y; });
+
+            node.attr("cx", function(d) { return d.x; })
+                    .attr("cy", function(d) { return d.y; });
+
+            flags.style('left', function(d){ return (d.x - 8) + "px" })
+                    .style('top',function(d){  return (d.y - 6) + "px"});
+        });
+
+    });
+</script>
+</body>
+<html>
