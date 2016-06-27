@@ -152,11 +152,18 @@
                             .style({
                                 "left": function (d) {
                                     // 优化弹窗
+                                    var position = d3.event.pageX;
                                     if(d3.event.pageX + 150 > width){
-                                        return (d3.event.pageX - 300) + "px"
+                                        position = (d3.event.pageX - 300) + "px"
                                     } else {
-                                        return (d3.event.pageX - 150) + "px"
+                                        position = (d3.event.pageX - 150) + "px"
                                     }
+                                    if(d3.event.pageX -150 < 10){
+                                        position = 150;
+                                    }
+                                    console.log(d3.event.pageX, position);
+
+                                    return position;
                                 },
                                 "top": function (d) {
                                     // top
