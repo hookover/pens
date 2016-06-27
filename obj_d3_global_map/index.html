@@ -102,13 +102,12 @@
         jsonData.features = jsonData.features.sort(function (a,b) {
             return Number(a.properties.mass) < Number(b.properties.mass);
         });
-        console.log(jsonData.features);
         var max = jsonData.features.reduce((arr, curr) => Math.max(arr, Number(curr.properties.mass)), 0);
-        max /= 30;
+        max /= 10;
 
         circle_scale = d3.scale.linear()
                 .domain([0, max])
-                .range([2, 20]);
+                .range([2, 18]);
         svg.append("g").selectAll('path')
                 .data(jsonData.features).enter()
                 .append("circle")
