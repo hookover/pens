@@ -119,7 +119,11 @@
                 })
                 .attr('r', function(d) {
                     var cw = circle_scale(d.properties.mass);
-                    return cw > 20 ? 25 : cw;
+                    if(cw > 30) return 30;
+                    if(cw > 25) return 25;
+                    if(cw > 20) return 20;
+                    return cw;
+//                    return cw > 20 ? 25 : cw;
                 })
                 .attr("fill", function (d) {
                     return color([d.properties.mass, d.properties.year])
