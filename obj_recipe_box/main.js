@@ -186,9 +186,6 @@ var App = React.createClass({
             })
         });
     },
-    showModal(){
-        this.state.Modal.show = true;
-    },
     render: function () {
         return (
             <div>
