@@ -1,0 +1,28 @@
+<% include partials/head %>
+
+
+<div class="container">
+  <div class="">
+    <h1 class=" fa fa-user"> 用户信息</h1><br>
+    <span><strong>系统用户ID</strong>: <%= user._id ? user._id : '' %></span><br>
+    <span class="fa fa-sign-out"><a href="/logout"> 退出</a></span>
+    <hr>
+    <div class="">
+      <% if (user.local.email != null) { %>
+      <img src="https://avatars.io/gravatar/<%= user.local.email %>/140" class="img-circle"><br>
+      <strong>email</strong>: <%= user.local.email %><br>
+      <% } %>
+
+      <% if (user.github.id != null) { %>
+      <h2 class="fa fa-github"> GITHUB </h2><br>
+      <img src="https://avatars1.githubusercontent.com/u/<%= user.github.id %>" class="img-circle" style="max-width: 50px;"><br>
+      <strong>id</strong>: <%= user.github.id %><br>
+      <strong>email</strong>: <%= user.github.email %><br>
+      <strong>name</strong>: <%= user.github.name %>
+      <% } %>
+
+    </div>
+  </div>
+</div>
+
+<% include partials/foot %>
