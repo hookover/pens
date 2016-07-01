@@ -6,7 +6,6 @@ var App = React.createClass({
             generation: 0,
             runIndex: false,
             timeInterval: 200,
-            time: 0,
             data: []
         };
     },
@@ -15,7 +14,8 @@ var App = React.createClass({
         for(var i = 0; i < this.state.row; ++i) {
             data[i] = [];
             for(var j = 0; j < this.state.col; ++j) {
-                data[i][j] = Math.random() > 0.49 ? 0 : 1;
+                data[i][j] = Math.floor(Math.random() * 2);
+                //data[i][j] = Math.random() > 0.49 ? 0 : 1;
             }
         }
         this.setState({data: data});
@@ -33,17 +33,19 @@ var App = React.createClass({
         });
     },
     startGame: function() {
-        if(!this.state.runIndex) {
+        if(this.state.runIndex == false) {
             var self = this;
             var runIndex = setInterval(function () {
                 self.setState({generation: self.state.generation + 1, data: self.lifeAndDeath()});
             },this.state.timeInterval);
-            this.setState({runIndex: runIndex});
+            this.state.runIndex = runIndex;
+            console.log('start');
         }
     },
     stopGame: function() {
         clearInterval(this.state.runIndex);
-        this.setState({runIndex: false});
+        this.state.runIndex = false;
+        console.log('stop');
     },
     checkLifeOrDeath: function(value, row_index, col_index){
         var length = 0;
@@ -63,21 +65,50 @@ var App = React.createClass({
                 }
             }
         }
-
         // * 如果一个元胞有一个或零个邻居，会因为孤独而死亡。3个以上的邻居会因为拥挤而死亡。
         // * 如果空元胞正好有3个邻居，会在空元胞的位子生成一个元胞。
-        if(length === 3 || length === 2) {
+        // # 生存条件：
+        //      如果正好有3个邻居，则生存，如果当前有数据，数据++，没有数据则生成数据
+        //      2个邻居，有数据++，无数据不变
+        if(length === 3) {
             return value < 2 ? ++value : value;
+        }
+        if(length === 2) {
+            return value === 1 ? 2 : value;
         }
         return 0;
     },
+    changeLife : function (val, row, col) {
+        if(val === 0) {
+            this.state.data[row][col] = 1;
+            this.forceUpdate();
+        }
+    },
+    clear: function() {
+        var data = this.state.data;
+        for(var i=0; i<data.length; ++i) {
+            for(var j = 0; j < data[i].length; ++j) {
+                this.state.data[i][j] = 0;
+            }
+        }
+        this.stopGame();
+        this.state.generation = 0;
+
+        this.forceUpdate();
+    },
+    speed: function (v) {
+        this.state.timeInterval = Number(v);
+        this.stopGame();
+        this.startGame();
+    },
     render: function() {
-        var html = this.state.data.map(function (row) {
-            var cols = row.map(function (col) {
+        var self = this;
+        var html = this.state.data.map(function (row, row_index) {
+            var cols = row.map(function (col, col_index) {
                 var status = '';
                 if (col === 1) status = 'younger';
                 if (col === 2) status = 'older';
-                return <div className={status}></div>;
+                return (<div className={status} onClick={self.changeLife.bind(this, col, row_index, col_index)}></div>);
             });
             return (<div className='row'>{cols}</div>);
         });
@@ -85,11 +116,15 @@ var App = React.createClass({
         return (
             <div>
                 <div className="action">
-                    <span>生生不息，世代流逝，公元：{this.state.generation} 年</span>
+                    <span>生生不息，世代流逝，公元：<span className="generation">{this.state.generation}</span> 年  </span>
                     <a onClick={this.startGame} className="btn">开始</a>
-                    <a onClick={this.stopGame}className="btn">停止</a>
-                    <a className="btn">清空</a>
-                    <a className="btn">生成数据</a>
+                    <a onClick={this.stopGame} className="btn">停止</a>
+                    <a onClick={this.clear} className="btn">清空</a>
+                    <a onClick={this.initData} className="btn">重新生成数据</a>
+                    |
+                    <a onClick={self.speed.bind(this,50)} className="btn">快</a>
+                    <a onClick={self.speed.bind(this,200)} className="btn">正常</a>
+                    <a onClick={self.speed.bind(this,1000)} className="btn">慢</a>
                 </div>
                 <div className="game">
                     {html}
