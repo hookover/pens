@@ -1,0 +1,52 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+body{
+  //background: #342224;
+}
+.action{
+  margin: 2rem 0;
+}
+.action .btn{
+  cursor: pointer;
+  color: #ffffff;
+  padding: 0.3rem 1.5rem;
+  margin: 0.5rem;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background: #16a085;
+}
+.action .btn:hover{
+  background: #27ae60;
+}
+.container {
+  margin: 1rem auto;
+  text-align: center;
+}
+.game{
+  *word-spacing: -0.04rem;
+  font-size:0;
+}
+.game .row div{
+  background: #fff;
+  width: 8px;
+  height: 8px;
+  margin: 0.1rem;
+  -webkit-box-shadow: 1px 1px 1px #ccc;
+  -moz-box-shadow: 1px 1px 1px #ccc;
+  box-shadow: 1px 1px 1px #ccc;
+
+  display: inline-block;
+  *display:inline;
+  *zoom:1;
+  word-spacing:normal;
+  font-size:14px;
+}
+.younger{
+  background: #888!important;
+}
+.older{
+  background: #092B40!important;
+}
