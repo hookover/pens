@@ -1,0 +1,28 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 14px; }
+
+.game {
+  *word-spacing: -0.04rem;
+  font-size: 0;
+  text-align: center; }
+  .game .row .end {
+    background-color: #00acc2; }
+  .game .row .room {
+    background: #ffffff; }
+  .game .row .wall {
+    background-color: #daae1d; }
+  .game .row .soil {
+    background-color: #6b4c01; }
+  .game .row > div {
+    height: 10px;
+    width: 10px;
+    background: #b2b2b2;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    word-spacing: normal;
+    font-size: 14px; }
+
+/*# sourceMappingURL=style.css.map */
