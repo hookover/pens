@@ -7,15 +7,15 @@ var Game = React.createClass({
             tunnel: 'tunnel', //隧道
             end: 'end',      //地图边界
 
-            max_room_width: 16,     //房间最大宽度
-            max_room_height: 16,    //房间最大高度
+            max_room_width: 20,     //房间最大宽度
+            max_room_height: 20,    //房间最大高度
             min_room_width: 10,  //房间最小宽度
             min_room_height: 10, //房间最小高度
             show_weight: 50,    //地图显示区域宽度
             show_height: 50,    //地图显示区域高度
 
             map_width: 100,     //地图宽度
-            map_height: 55,     //地图高度
+            map_height: 50,     //地图高度
             mapData: [],        //地图数据
             walls: [            //所有墙的坐标
                 //{x: 0, y:0}
@@ -29,9 +29,6 @@ var Game = React.createClass({
                 life:  100,         //初始生命值
                 weapon: [],         //装备
                 level: 0            //等级
-            },
-            monster: {
-
             }
         }
     },
@@ -80,7 +77,6 @@ var Game = React.createClass({
             }
         }
         this.state.mapData = tmpMap;
-        this.forceUpdate();
     },
     randomRoomSize: function(){
         // 计算随机房间大小
@@ -208,11 +204,10 @@ var Game = React.createClass({
     //开挖地牢
     createDungeon: function(){
         var i = 0;
-        while(i<50) {
+        while(i<200) {
             this.createRoom();
             ++i;
         }
-        this.forceUpdate();
     },
     createMonster: function() {
 
@@ -221,6 +216,8 @@ var Game = React.createClass({
         this.createBaseMap();   //创建基础地图
         this.createDungeon();   //创建地牢
         this.createMonster();
+
+        this.forceUpdate();
     },
     //显示整个地图
     showMap: function(){
@@ -246,7 +243,7 @@ var Game = React.createClass({
         return (
             <div>
                 <Action/>
-                <div className="game">
+                <div className="game" style={{width: this.state.map_width * 11 + 'px', height: this.state.map_height * 11 + 'px'}} >
                     {htmls}
                 </div>
             </div>

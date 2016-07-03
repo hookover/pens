@@ -6,7 +6,8 @@ body {
 .game {
   *word-spacing: -0.04rem;
   font-size: 0;
-  text-align: center; }
+  text-align: center;
+  margin: 0 auto !important; }
   .game .row .end {
     background-color: #00acc2;
     border: 0.01rem solid #00acc2; }
