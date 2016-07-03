@@ -10,12 +10,17 @@ body{
   .row{
     .end{
       background-color: rgb(0, 172, 194);
+      border: 0.01rem solid rgb(0, 172, 194);
     }
     .room{
       background: #ffffff;
     }
     .wall{
-      background-color: #daae1d;
+      //background-color: #daae1d;
+      background-color: rgb(107, 76, 1);
+    }
+    .tunnel{
+      background-color: rgba(0, 130, 100,0.3);
     }
     .soil{
       background-color: rgb(107, 76, 1);
@@ -30,6 +35,8 @@ body{
       *zoom:1;
       word-spacing:normal;
       font-size:14px;
+
+      border: 0.01rem solid rgba(255, 255, 255, 0.1);
     }
   }
 }

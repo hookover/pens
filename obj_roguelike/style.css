@@ -8,11 +8,14 @@ body {
   font-size: 0;
   text-align: center; }
   .game .row .end {
-    background-color: #00acc2; }
+    background-color: #00acc2;
+    border: 0.01rem solid #00acc2; }
   .game .row .room {
     background: #ffffff; }
   .game .row .wall {
-    background-color: #daae1d; }
+    background-color: #6b4c01; }
+  .game .row .tunnel {
+    background-color: rgba(0, 130, 100, 0.3); }
   .game .row .soil {
     background-color: #6b4c01; }
   .game .row > div {
@@ -23,6 +26,7 @@ body {
     *display: inline;
     *zoom: 1;
     word-spacing: normal;
-    font-size: 14px; }
+    font-size: 14px;
+    border: 0.01rem solid rgba(255, 255, 255, 0.1); }
 
 /*# sourceMappingURL=style.css.map */

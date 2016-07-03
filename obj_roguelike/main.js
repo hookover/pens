@@ -4,6 +4,7 @@ var Game = React.createClass({
             soil: 'soil',    //泥图
             room: 'room',    //房间
             wall: 'wall',    //墙
+            tunnel: 'tunnel', //隧道
             end: 'end',      //地图边界
 
             max_room_width: 16,     //房间最大宽度
@@ -26,8 +27,11 @@ var Game = React.createClass({
                     y:0
                 },
                 life:  100,         //初始生命值
-                weapon: [],         //武器
-                level: 0,           //等级
+                weapon: [],         //装备
+                level: 0            //等级
+            },
+            monster: {
+
             }
         }
     },
@@ -128,7 +132,7 @@ var Game = React.createClass({
     createRoom: function(){
         var loop,wall,roomSize,newRoom_x,newRoom_y,tunnel,loop_tool = 0;
         //挖墙点
-        while(loop_tool < 100) {
+        while(loop_tool < 500) {
             loop = false;
             wall = this.randomWall();   //得到随机可挖墙体
             roomSize = this.randomRoomSize();   //得到新的随机房间尺寸
@@ -195,8 +199,8 @@ var Game = React.createClass({
                 }
             }
 
-            this.state.mapData[wall.y][wall.x] = this.state.room;   //打开新房间通道
-            this.state.mapData[tunnel.y][tunnel.x] = this.state.room;   //打开旧房间通道
+            this.state.mapData[wall.y][wall.x] = this.state.tunnel;   //打开新房间通道
+            this.state.mapData[tunnel.y][tunnel.x] = this.state.tunnel;   //打开旧房间通道
             this.state.walls.splice(wall.coordinate, 1);            //将挖掉的墙从墙数据里移出
             this.state.walls.splice({x: tunnel.x, y: tunnel.y}, 1);
         }
@@ -204,15 +208,19 @@ var Game = React.createClass({
     //开挖地牢
     createDungeon: function(){
         var i = 0;
-        while(i<30) {
+        while(i<50) {
             this.createRoom();
             ++i;
         }
         this.forceUpdate();
     },
+    createMonster: function() {
+
+    },
     initMap: function(){
         this.createBaseMap();   //创建基础地图
         this.createDungeon();   //创建地牢
+        this.createMonster();
     },
     //显示整个地图
     showMap: function(){
