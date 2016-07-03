@@ -69,13 +69,14 @@ var Game = React.createClass({
             for(j = x; j < max_x; ++j) {
                 if(i == y || j == x || i == (max_y - 1) || j == (max_x - 1)) {
                     tmpMap[i][j] = this.state.wall;
+                    this.state.walls.push({y: i, x: j}); //把所有墙体放到数组以方便检索
                 } else {
                     tmpMap[i][j] = this.state.room;
                 }
             }
         }
-
-        this.setState({mapData: tmpMap});
+        this.state.mapData = tmpMap;
+        this.forceUpdate();
     },
     randomRoomSize: function(){
         // 计算随机房间大小
@@ -90,23 +91,124 @@ var Game = React.createClass({
             width: room_width
         }
     },
-    randomCoordinate: function(width, height){
-
-
-        return {
-            x: x,
-            y: y
+    randomWall: function(){
+        //随机选择一块墙体
+        var max_wall_block = this.state.walls.length - 1;
+        var x,y,direction; //开挖方向
+        while(true) {
+            var coordinate = Math.floor(Math.random() * max_wall_block);
+            x = this.state.walls[coordinate].x;
+            y = this.state.walls[coordinate].y;
+            var mapData = this.state.mapData;
+            // 墙位 上
+            if(mapData[y-1][x] == this.state.room) {
+                direction = 'bottom';
+                break;
+            }
+            // 墙位 下
+            if(mapData[y+1][x] == this.state.room) {
+                direction = 'top';
+                break;
+            }
+            // 墙位 左
+            if(mapData[y][x-1] == this.state.room) {
+                direction = 'right';
+                break;
+            }
+            // 墙位 右
+            if(mapData[y][x+1] == this.state.room) {
+                direction = 'left';
+                break;
+            }
         }
+        //确认泥土方向
+        return {coordinate: coordinate, x: x, y: y , direction};
     },
     // 创建房间
     createRoom: function(){
+        var loop,wall,roomSize,newRoom_x,newRoom_y,tunnel,loop_tool = 0;
+        //挖墙点
+        while(loop_tool < 100) {
+            loop = false;
+            wall = this.randomWall();   //得到随机可挖墙体
+            roomSize = this.randomRoomSize();   //得到新的随机房间尺寸
+            newRoom_x = 0;
+            newRoom_y = 0;   //新房间左上角坐标，根据该坐标和roomSize可以得到新房间具体范围
 
+            //尝试开挖房间数据范围
+            if(wall.direction == 'top') {
+                // 向上挖
+                newRoom_x = wall.x - Math.floor(Math.random() * roomSize.width / 1.5) - 1;
+                newRoom_y = wall.y - roomSize.height;
 
+                tunnel = {x: wall.x, y: wall.y-1}
+            }
+            if(wall.direction == 'bottom') {
+                // 向下挖
+                newRoom_x = wall.x - Math.floor(roomSize.width / 2);
+                newRoom_y = wall.y + 1;
+                tunnel = {x: wall.x, y: wall.y+1}
+            }
+            if(wall.direction == 'left') {
+                // 向左挖
+                newRoom_x = wall.x - roomSize.width;
+                newRoom_y = wall.y - Math.floor(roomSize.height / 2);
+                tunnel = {x: wall.x - 1, y: wall.y}
+            }
+            if(wall.direction == 'right') {
+                // 向右挖
+                newRoom_x = wall.x + 1;
+                newRoom_y = wall.y - Math.floor(Math.random() * roomSize.height / 1.5) - 1;
+                tunnel = {x: wall.x + 1, y: wall.y}
+            }
+            if(newRoom_x < 1 || (newRoom_x + roomSize.width) > (this.state.map_width - 2)) {    //检测越界
+                continue;
+            }
+            if(newRoom_y < 1 || (newRoom_y + roomSize.height) > (this.state.map_height - 2)) {  //检测越界
+                continue;
+            }
 
+            // 检测是否可用
+            for(var i = newRoom_y; i < (newRoom_y + roomSize.height); ++i) {
+                for(var j = newRoom_x; j < (newRoom_x + roomSize.width); ++j) {
+                    if(this.state.mapData[i][j] != this.state.soil) {
+                        loop = true;
+                    }
+                }
+            }
+            if(!loop) {
+                break;
+            }
+            loop_tool ++;
+        }
+
+        if(!loop){
+            for(i = newRoom_y; i < (newRoom_y + roomSize.height); ++i) {
+                for(j = newRoom_x; j < (newRoom_x + roomSize.width); ++j) {
+                    if(i == newRoom_y || j == newRoom_x || i == (newRoom_y + roomSize.height - 1) || j == (newRoom_x + roomSize.width - 1)) {
+                        this.state.mapData[i][j] = this.state.wall;
+                        this.state.walls.push({y: i, x: j}); //把所有墙体放到数组以方便检索
+                    } else {
+                        this.state.mapData[i][j] = this.state.room;
+                    }
+
+                }
+            }
+
+            this.state.mapData[wall.y][wall.x] = this.state.room;   //打开新房间通道
+            this.state.mapData[tunnel.y][tunnel.x] = this.state.room;   //打开旧房间通道
+            this.state.walls.splice(wall.coordinate, 1);            //将挖掉的墙从墙数据里移出
+            this.state.walls.splice({x: tunnel.x, y: tunnel.y}, 1);
+        }
     },
     //开挖地牢
     createDungeon: function(){
-        this.createRoom();
+        var i = 0;
+        while(i<30) {
+            this.createRoom();
+            ++i;
+        }
+        this.forceUpdate();
     },
     initMap: function(){
         this.createBaseMap();   //创建基础地图
@@ -114,16 +216,18 @@ var Game = React.createClass({
     },
     //显示整个地图
     showMap: function(){
-        var renderHtml = this.state.mapData.map(function (row) {
+        return this.state.mapData.map(function (row) {
             var cols = row.map(function (col) {
                 return <div className={col}></div>
             });
             return <div className='row'>{cols}</div>
         });
-        return renderHtml;
     },
     //显示角色可见区域
     visibleRegion: function(){
+
+    },
+    componentWillMount: function(){
 
     },
     componentDidMount: function(){
