@@ -126,7 +126,7 @@ var App = React.createClass({
                     <a onClick={self.speed.bind(this,200)} className="btn">正常</a>
                     <a onClick={self.speed.bind(this,1000)} className="btn">慢</a>
                 </div>
-                <div className="game">
+                <div className="game" style={{width: this.state.col * 12 + 'px'}}>
                     {html}
                 </div>
             </div>

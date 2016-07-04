@@ -187,7 +187,7 @@ var Game = React.createClass({
                 for(j = newRoom_x; j < (newRoom_x + roomSize.width); ++j) {
                     if(i == newRoom_y || j == newRoom_x || i == (newRoom_y + roomSize.height - 1) || j == (newRoom_x + roomSize.width - 1)) {
                         this.state.mapData[i][j] = this.state.wall;
-                        this.state.walls.push({y: i, x: j}); //把所有墙体放到数组以方便检索
+                        this.state.walls.push({y: i, x: j});                //把所有墙体放到数组以方便检索
                     } else {
                         this.state.mapData[i][j] = this.state.room;
                     }
@@ -195,16 +195,18 @@ var Game = React.createClass({
                 }
             }
 
-            this.state.mapData[wall.y][wall.x] = this.state.tunnel;   //打开新房间通道
-            this.state.mapData[tunnel.y][tunnel.x] = this.state.tunnel;   //打开旧房间通道
-            this.state.walls.splice(wall.coordinate, 1);            //将挖掉的墙从墙数据里移出
-            this.state.walls.splice({x: tunnel.x, y: tunnel.y}, 1);
+            this.state.mapData[wall.y][wall.x] = this.state.tunnel;         //打开新房间通道
+            this.state.mapData[tunnel.y][tunnel.x] = this.state.tunnel;     //打开旧房间通道
+            this.state.walls.splice(wall.coordinate, 1);                    //将挖掉的墙从墙数据里移出
+            this.state.walls.splice({x: tunnel.x, y: tunnel.y}, 1);         //将挖掉的墙从墙数据里移出
         }
     },
     //开挖地牢
     createDungeon: function(){
         var i = 0;
-        while(i<200) {
+        var roomNumber = 2 * this.state.map_width * this.state.map_height / (this.state.max_room_width * this.state.min_room_height);
+
+        while(i < roomNumber) {
             this.createRoom();
             ++i;
         }
