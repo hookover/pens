@@ -1,3 +1,16 @@
+
+class monster{
+    constructor(){
+
+    }
+
+}
+class Hero {
+
+    attack(weapon, monster){
+
+    }
+}
 var Game = React.createClass({
     getInitialState: function(){
         return {
@@ -194,7 +207,6 @@ var Game = React.createClass({
 
                 }
             }
-
             this.state.mapData[wall.y][wall.x] = this.state.tunnel;         //打开新房间通道
             this.state.mapData[tunnel.y][tunnel.x] = this.state.tunnel;     //打开旧房间通道
             this.state.walls.splice(wall.coordinate, 1);                    //将挖掉的墙从墙数据里移出
@@ -217,9 +229,9 @@ var Game = React.createClass({
     initMap: function(){
         this.createBaseMap();   //创建基础地图
         this.createDungeon();   //创建地牢
-        this.createMonster();
+        this.createMonster();   //创造怪物
 
-        this.forceUpdate();
+        this.forceUpdate();     //渲染数据到界面
     },
     //显示整个地图
     showMap: function(){
