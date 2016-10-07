@@ -256,21 +256,26 @@ var Game = React.createClass({
         var htmls = this.showMap();
         return (
             <div>
+                <span>一个打怪游戏,目前只做好随机地图生成 </span>
+                <a href="#" onClick={this.reloadMap}>刷新地图</a>
                 <Action/>
                 <div className="game" style={{width: this.state.map_width * 11 + 'px', height: this.state.map_height * 11 + 'px'}} >
                     {htmls}
                 </div>
             </div>
         );
+    },
+    reloadMap: function() {
+        this.initMap();
     }
 });
 var Action = React.createClass({
     render: function() {
         return (
             <div class="action">
-                <a href="#" class="btn">开始游戏</a>
-                <a href="#" class="btn">停止</a>
-                <a href="#" class="btn">清空</a>
+                {/*<a href="#" class="btn">开始游戏</a>*/}
+                {/*<a href="#" class="btn">停止</a>*/}
+                {/*<a href="#" class="btn">清空</a>*/}
             </div>
         )
     }
